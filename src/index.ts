@@ -17,7 +17,7 @@ const scraperLaunchOptions: LaunchOptions = {
 const pageOptions: NavOptions = {
 	waitUntil: 'networkidle2'
 }
-const categoryURL = 'https://www.guess.com/us/en/men/apparel/new-arrivals?start=0&sz=405'
+const categoryURL = 'https://www.guess.com/us/en/men/apparel/view-all'
 
 app.listen(PORT, () => {
 	console.log(`Server running on ${PORT}`)
