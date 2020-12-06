@@ -32,8 +32,10 @@ async function createList(map: HTMLEl): Promise<string[]> {
 	if (map === undefined) return null
 	const ulChildren = await map.getProperty('children')
 	const amount = Object.keys(await ulChildren.jsonValue()).length
+
 	let arr = []
 	let nth = 1
+
 	for (let i = 0; i < amount; i++) {
 		let liX = `${detailsX}/li[${nth}]`
 		let [liHandle] = await map.$x(liX)

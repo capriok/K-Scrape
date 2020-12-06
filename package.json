@@ -1,9 +1,10 @@
 {
-  "name": "pup-api",
+  "name": "guess-api",
   "version": "1.0.0",
-  "author": "",
-  "description": "",
+  "author": "kyle caprio",
+  "description": "web scraper for guess.com",
   "main": "index.ts",
+  "repository": "https://github.com/capriok/Guess-api",
   "scripts": {
     "watched": "cross-env NODE_ENV=development node -r dotenv/config -r ts-node/register ./src/index.ts",
     "dev": "nodemon",

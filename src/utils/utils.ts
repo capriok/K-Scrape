@@ -14,10 +14,10 @@ export async function createImg(img: HTMLEl): Promise<string | unknown> {
 	return await rawSrc
 }
 
-export function parseText(text): string {
-	return text.replace(/\r?\n|\r/g, '')
+export function parseText<T>(text: T): string {
+	return String(text).replace(/\r?\n|\r/g, '')
 }
 
-export function parsePrice(price) {
-	return price.replace(/[^$0-9.]+/g, '')
+export function parsePrice<T>(price: T): string {
+	return String(price).replace(/[^$0-9.]+/g, '')
 }

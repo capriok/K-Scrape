@@ -16,8 +16,10 @@ async function createList(map: HTMLEl, count?: number): Promise<string[]> {
 	const mapChildren = await map.getProperty('children')
 	let amount = count
 	if (count === undefined) amount = Object.keys(await mapChildren.jsonValue()).length
+
 	let arr = []
 	let nth = 1
+
 	for (let i = 0; i < amount; i++) {
 		let anchorX = `${allListings}/div[${nth}]${linkX}`
 		let [linkHandle] = await map.$x(anchorX)
@@ -25,7 +27,6 @@ async function createList(map: HTMLEl, count?: number): Promise<string[]> {
 		arr.push(link)
 		nth++
 	}
-	console.log(`Successfully scraped ${amount} listings`);
-	console.log(arr);
+
 	return arr
 }
