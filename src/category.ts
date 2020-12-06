@@ -19,7 +19,6 @@ async function createList(map: HTMLEl, count?: number): Promise<string[]> {
 	let arr = []
 	let nth = 1
 	for (let i = 0; i < amount; i++) {
-		console.log(`${i} of ${amount}`);
 		let anchorX = `${allListings}/div[${nth}]${linkX}`
 		let [linkHandle] = await map.$x(anchorX)
 		let link = await createString('href', linkHandle)
