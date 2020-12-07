@@ -1,49 +1,73 @@
-import { Page, HTMLEl } from './typings'
-import { createImg, createString, parsePrice, parseText } from './utils/utils'
+import { Page, HTMLEl } from './main'
+import { clearnPrice, capitalize, cleanText } from './utils/utils'
 
-const titleX = '/html/body/div[2]/div[3]/div[1]/div[2]/div/div[1]/div/h1'
-const priceX = '/html/body/div[2]/div[3]/div[1]/div[2]/div/div[2]/div/div/div/span/span/span'
-const descX = '//*[@id="description-1"]'
-const detailsX = '//*[@id="details-1"]/ul'
-const imgX = '/html/body/div[2]/div[3]/div[1]/div[1]/div[1]/div/div[1]/div/div/div[1]/div/div/img'
+const listingInfoSelector = '.product-detail__info'
+const titleSelector = '.product-name'
+const origPriceSelector = '.value'
+const salePriceSelector = '.price__value--sale'
+const colorSelector = '.js-selected-color'
+const descriptionSelector = '.js-content'
+const detailsSelector = '.js-content > .pl-3 > li'
+
+const listingImagesSelector = '.css-2zclyl'
+const imagesSelector = '.css-1a4s3ga>.css-1p6kesl>.assetWrapper>.css-wxdkry>.css-b7jmoi>img'
 
 export default async function scrapeListing(page: Page) {
 
-	const [titleHandle] = await page.$x(titleX)
-	const title = await createString('textContent', titleHandle)
+	const listingInfo = await page.$(listingInfoSelector)
 
-	const [priceHandle] = await page.$x(priceX)
-	const price = await parsePrice(await createString('textContent', priceHandle))
+	const title = await listingInfo.$eval(
+		titleSelector,
+		(node: Element): string => node.textContent
+	)
 
-	const [descHandle] = await page.$x(descX)
-	const description = await createString('textContent', descHandle)
+	const origPrice = await listingInfo.$eval(
+		origPriceSelector,
+		(node: Element): string => node.textContent
+	)
 
-	const [detailshandle] = await page.$x(detailsX)
-	const details = await createList(detailshandle)
+	const salePrice = await listingInfo.$eval(
+		salePriceSelector,
+		(node: Element): string => node.textContent
+	)
 
-	const [imgHandle] = await page.$x(imgX)
-	const img = await createImg(imgHandle)
+	const color = await listingInfo.$eval(
+		colorSelector,
+		(node: Element): string => node.textContent
+	)
 
-	return { title, price, description, details, img }
+	const description = await listingInfo.$eval(
+		descriptionSelector,
+		(node: Element): string => node.textContent
+	)
 
-}
+	const details = await listingInfo.$$eval(
+		detailsSelector,
+		(nodes: Element[]): string[] => {
+			return nodes.map((node: Element): string => {
+				return node.textContent
+			})
+		}
+	)
 
-async function createList(map: HTMLEl): Promise<string[]> {
-	if (map === undefined) return null
-	const ulChildren = await map.getProperty('children')
-	const amount = Object.keys(await ulChildren.jsonValue()).length
+	const listingImages = await page.$(listingImagesSelector)
 
-	let arr = []
-	let nth = 1
+	const images = await listingImages.$$eval(
+		imagesSelector,
+		(nodes: Element[]): string[] => {
+			return nodes.map((node: Element): string => {
+				return node.getAttribute('src')
+			})
+		}
+	)
 
-	for (let i = 0; i < amount; i++) {
-		let liX = `${detailsX}/li[${nth}]`
-		let [liHandle] = await map.$x(liX)
-		let liText = await liHandle.getProperty('textContent')
-		let rawLi = await liText.jsonValue()
-		arr.push(parseText(rawLi))
-		nth++
+	return {
+		title: cleanText(title),
+		origPrice: clearnPrice(origPrice),
+		salePrice: clearnPrice(salePrice),
+		color: capitalize(color),
+		description: cleanText(description),
+		details: details.map(d => cleanText(d)),
+		images
 	}
-
-	return arr
 }

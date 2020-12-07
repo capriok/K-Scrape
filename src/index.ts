@@ -1,11 +1,20 @@
 import express from 'express'
+import path from 'path'
 import puppeteer from 'puppeteer'
 import categoryScraper from './category'
 import listingScraper from './listing'
-import { LaunchOptions, NavOptions, Page } from './typings'
+import { LaunchOptions, NavOptions, Page } from './main'
 
 const app = express()
 const PORT = process.env.PORT || 9000
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', require('ejs').renderFile);
+
+app.get('/', (req, res) => {
+	res.render('index', { msg: 'Welcome!' })
+})
 
 const scraperLaunchOptions: LaunchOptions = {
 	headless: true,
@@ -17,7 +26,8 @@ const scraperLaunchOptions: LaunchOptions = {
 const pageOptions: NavOptions = {
 	waitUntil: 'networkidle2'
 }
-const categoryURL = 'https://www.guess.com/us/en/men/apparel/hoodies-and-sweaters'
+
+const categoryURL = 'https://www.guess.com/us/en/men/apparel/new-arrivals'
 
 app.listen(PORT, () => {
 	console.log(`Server running on ${PORT}`)
@@ -27,20 +37,19 @@ app.listen(PORT, () => {
 async function startBrowser(URL: string) {
 	const browser = await puppeteer.launch(scraperLaunchOptions)
 	const categoryPage = await browser.newPage()
-	await initCategoryScraper(categoryPage, URL)
-		.then(async listingUrls =>
-			await initListingScaper(categoryPage, listingUrls)
-		)
-		.catch(e => console.log(e))
+
+	const listingUrls = await initCategoryScraper(categoryPage, URL)
+	await initListingScaper(categoryPage, listingUrls)
 
 	browser.close()
 }
 
 
-async function initCategoryScraper(page: Page, URL: string): Promise<string[]> {
+async function initCategoryScraper(page: Page, URL: string): Promise<string[] | any> {
 	console.log('Initializing Category Scraper');
 
 	await page.goto(URL, pageOptions)
+
 	const listingUrls = await categoryScraper(page)
 
 	console.log(`Successfully scraped ${listingUrls.length} listings`);
@@ -57,7 +66,6 @@ async function initListingScaper(page: Page, listingUrls: string[]): Promise<unk
 
 	for (const url of listingUrls) {
 		console.log(`${progress} of ${listingUrls.length}`);
-		if (url.includes('klarna')) return
 		await page.goto(url, pageOptions)
 		listings.push(await listingScraper(page))
 		progress++

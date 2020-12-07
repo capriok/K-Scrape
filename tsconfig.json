@@ -1,4 +1,7 @@
 {
+	"lib": [
+		"dom"
+	],
 	"compilerOptions": {
 		"target": "es6",
 		"module": "commonjs",
@@ -7,7 +10,8 @@
 		"sourceMap": true
 	},
 	"include": [
-		"src/**/*.ts"
+		"src/**/*.ts",
+		"main.d.ts"
 	],
 	"exclude": [
 		"node_modules",
