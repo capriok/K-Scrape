@@ -12,7 +12,7 @@ const detailsSelector = '.js-content > .pl-3 > li'
 const listingImagesSelector = '.css-2zclyl'
 const imagesSelector = '.css-1a4s3ga>.css-1p6kesl>.assetWrapper>.css-wxdkry>.css-b7jmoi>img'
 
-export default async function scrapeListing(page: Page) {
+export default async function scrapeListing(page: Page): Promise<Object> {
 
 	const listingInfo = await page.$(listingInfoSelector)
 
