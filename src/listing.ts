@@ -1,4 +1,5 @@
-import { Page, HTMLEl } from './main'
+import { Page } from './main'
+
 import { clearnPrice, capitalize, cleanText } from './utils/utils'
 
 const listingInfoSelector = '.product-detail__info'
