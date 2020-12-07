@@ -27,7 +27,7 @@ const pageOptions: NavOptions = {
 	waitUntil: 'networkidle2'
 }
 
-const categoryURL = 'https://www.guess.com/us/en/men/apparel/new-arrivals'
+const categoryURL = 'https://www.guess.com/us/en/women/apparel/new-arrivals'
 
 app.listen(PORT, () => {
 	console.log(`Server running on ${PORT}`)

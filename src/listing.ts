@@ -2,48 +2,50 @@ import { Page } from './main'
 
 import { clearnPrice, capitalize, cleanText } from './utils/utils'
 
-const listingInfoSelector = '.product-detail__info'
-const titleSelector = '.product-name'
-const origPriceSelector = '.value'
-const salePriceSelector = '.price__value--sale'
-const colorSelector = '.js-selected-color'
-const descriptionSelector = '.js-content'
-const detailsSelector = '.js-content > .pl-3 > li'
+const infoHandle = '.product-detail__info'
+const imagesHandle = '.css-2zclyl'
+const selectors = {
+	title: '.product-name',
+	origPrice: '.value',
+	salePrice: '.price__value--sale',
+	color: '.js-selected-color',
+	description: '.js-content',
+	details: '.js-content > .pl-3 > li',
+	images: '.css-1a4s3ga>.css-1p6kesl>.assetWrapper>.css-wxdkry>.css-b7jmoi>img'
 
-const listingImagesSelector = '.css-2zclyl'
-const imagesSelector = '.css-1a4s3ga>.css-1p6kesl>.assetWrapper>.css-wxdkry>.css-b7jmoi>img'
+}
 
 export default async function scrapeListing(page: Page): Promise<Object> {
 
-	const listingInfo = await page.$(listingInfoSelector)
+	const listingInfo = await page.$(infoHandle)
 
 	const title = await listingInfo.$eval(
-		titleSelector,
+		selectors.title,
 		(node: Element): string => node.textContent
 	)
 
 	const origPrice = await listingInfo.$eval(
-		origPriceSelector,
+		selectors.origPrice,
 		(node: Element): string => node.textContent
 	)
 
 	const salePrice = await listingInfo.$eval(
-		salePriceSelector,
+		selectors.salePrice,
 		(node: Element): string => node.textContent
 	)
 
 	const color = await listingInfo.$eval(
-		colorSelector,
+		selectors.color,
 		(node: Element): string => node.textContent
 	)
 
 	const description = await listingInfo.$eval(
-		descriptionSelector,
+		selectors.description,
 		(node: Element): string => node.textContent
 	)
 
 	const details = await listingInfo.$$eval(
-		detailsSelector,
+		selectors.details,
 		(nodes: Element[]): string[] => {
 			return nodes.map((node: Element): string => {
 				return node.textContent
@@ -51,10 +53,10 @@ export default async function scrapeListing(page: Page): Promise<Object> {
 		}
 	)
 
-	const listingImages = await page.$(listingImagesSelector)
+	const listingImages = await page.$(imagesHandle)
 
 	const images = await listingImages.$$eval(
-		imagesSelector,
+		selectors.images,
 		(nodes: Element[]): string[] => {
 			return nodes.map((node: Element): string => {
 				return node.getAttribute('src')
