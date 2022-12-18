@@ -16,13 +16,13 @@ export async function browseXReports() {
 }
 
 export const initializeReportScraper = async (page: Page) => {
-  const reportList = await reportListScraper(page, 2);
+  const reportList = await reportListScraper(page, 5);
 
   let reports = [];
   let progress = 1;
 
   for (const url of reportList) {
-    Kapi.log(`ReportList Scraping ${progress} of ${reportList.length}`);
+    Kapi.log(`ReportList Scraping #${progress}`);
     const page = await Kapi.goto(url);
     reports.push(await reportContentScraper(page));
 

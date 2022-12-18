@@ -39,24 +39,21 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     Kapi.log(error.message, "Scraper");
   }
 
-  const title = await report.$eval(
-    selectors.title,
-    (node: Element): string => node.textContent
-  );
+  const title = await report
+    .$eval(selectors.title, (node: Element): string => node.textContent)
+    .catch((e) => Kapi.log(e.message));
 
-  const date = await report.$eval(
-    selectors.date,
-    (node: Element): string => node.textContent
-  );
+  const date = await report
+    .$eval(selectors.date, (node: Element): string => node.textContent)
+    .catch((e) => Kapi.log(e.message));
 
-  const description = await report.$$eval(
-    selectors.description,
-    (nodes: Element[]): string[] => {
+  const description = await report
+    .$$eval(selectors.description, (nodes: Element[]): string[] => {
       return nodes.slice(0, 2).map((node: Element): string => {
         return node.textContent.replace("Watch The X22 Report On Video", "");
       });
-    }
-  );
+    })
+    .catch((e) => Kapi.log(e.message));
 
   const meta = {
     title: await page.title(),

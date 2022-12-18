@@ -11,20 +11,16 @@ import { browseXReports } from "./scrapers/XReports";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// mine
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "html");
-// app.engine("html", require("ejs").renderFile);
-
-// repo
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
 app.use(expressLayouts);
+app.set("view engine", "html");
+app.engine("html", require("ejs").renderFile);
 app.set("layout", "layouts/layout");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
+const Kapi = new K.api();
+
 app.get("/", async (req, res) => {
-  const Kapi = new K.api();
   const racerx = await Kapi.load("racerx").catch((e) =>
     Kapi.log(e.message, "File")
   );
@@ -32,8 +28,9 @@ app.get("/", async (req, res) => {
     Kapi.log(e.message, "File")
   );
 
-  res.render("main", {
-    racerx: racerx,
+  res.render("home", {
+    racerx,
+    xreport,
   });
 });
 

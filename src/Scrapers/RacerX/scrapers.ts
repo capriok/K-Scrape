@@ -16,7 +16,15 @@ export const categoryListScraper = async (
     });
   });
 
-  return list.slice(0, limit ? limit : list.length);
+  const categories = [
+    "/category/racer-x-podcast",
+    "/category/racer-x-race-review-podcast",
+    "/category/exhaust",
+  ];
+
+  const filtered = list.filter((l) => categories.includes(l));
+
+  return filtered.slice(0, limit ? limit : list.length);
 };
 
 export const articleListScraper = async (
@@ -54,24 +62,21 @@ export const articleContentScraper = async (page: Page): Promise<object> => {
     Kapi.log(error.message, "Scraper");
   }
 
-  const title = await article.$eval(
-    selectors.title,
-    (node: Element): string => node.textContent
-  );
+  const title = await article
+    .$eval(selectors.title, (node: Element): string => node.textContent)
+    .catch((e) => Kapi.log(e.message));
 
-  const date = await article.$eval(
-    selectors.date,
-    (node: Element): string => node.textContent
-  );
+  const date = await article
+    .$eval(selectors.date, (node: Element): string => node.textContent)
+    .catch((e) => Kapi.log(e.message));
 
-  const description = await article.$$eval(
-    selectors.description,
-    (nodes: Element[]): string[] => {
+  const description = await article
+    .$$eval(selectors.description, (nodes: Element[]): string[] => {
       return nodes.slice(0, 2).map((node: Element): string => {
-        return node.textContent.replace("Watch The X22 Report On Video", "");
+        return node.textContent;
       });
-    }
-  );
+    })
+    .catch((e) => Kapi.log(e.message));
 
   const meta = {
     title: await page.title(),

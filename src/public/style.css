@@ -72,3 +72,17 @@ h1 {
   border: 1px solid lightgray;
   border-radius: 5px;
 }
+
+.card {
+  overflow: hidden;
+  width: 400px;
+  height: 200px;
+  margin: 16px;
+  background-color: #f0f0f0;
+  border: 2px solid black;
+}
+
+.home-featured-list {
+  display: flex;
+  width: 100vw;
+}

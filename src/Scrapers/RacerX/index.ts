@@ -20,7 +20,7 @@ export async function browseRacerX() {
 }
 
 export async function initializeCategoryScraper(page: Page) {
-  const categoryList = await categoryListScraper(page, 2);
+  const categoryList = await categoryListScraper(page);
 
   let articles = [];
   let progressc = 1;
@@ -29,14 +29,10 @@ export async function initializeCategoryScraper(page: Page) {
   for (const urlc of categoryList) {
     Kapi.log(`CategoryList Scraping ${progressc} of ${categoryList.length}`);
     const page = await Kapi.goto(racerxBase + urlc);
-    const articlesList = await articleListScraper(page, 2);
+    const articlesList = await articleListScraper(page, 5);
 
     for (const urla of articlesList) {
-      Kapi.log(
-        `ArticlesList Scraping ${progressa} of ${
-          categoryList.length + articlesList.length
-        }`
-      );
+      Kapi.log(`ArticlesList Scraping #${progressa}`);
       const page = await Kapi.goto(racerxBase + urla);
       articles.push(await articleContentScraper(page));
 
