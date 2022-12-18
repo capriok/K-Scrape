@@ -1,8 +1,8 @@
-import { Api } from "../../api";
+import { K } from "../../api";
 import { Page } from "../../main";
 import { reportContentScraper, reportListScraper } from "./scrapers";
 
-const Kapi = new Api.Kapi();
+const Kapi = new K.api();
 
 const xReportsBase = "https://x22report.com";
 
@@ -11,11 +11,11 @@ export async function browseXReports() {
   await Kapi.open();
   const page = await Kapi.goto(xReports);
   const reports = await initializeReportScraper(page);
-  Kapi.log(reports, "Finding");
+  Kapi.save("xreport", reports);
   Kapi.close();
 }
 
-export const initializeReportScraper = async (page: Page): Promise<unknown> => {
+export const initializeReportScraper = async (page: Page) => {
   const reportList = await reportListScraper(page, 2);
 
   let reports = [];

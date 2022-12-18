@@ -1,8 +1,8 @@
-import { Api } from "../../api";
+import { K } from "../../api";
 import { cleanText } from "../../Helpers/functions";
 import { Page } from "../../main";
 
-const Kapi = new Api.Kapi();
+const Kapi = new K.api();
 
 export const reportListScraper = async (
   page: Page,
@@ -36,7 +36,7 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     const frame = await iframe.contentFrame();
     podcast = frame.url();
   } catch (error) {
-    Kapi.log(error.message, "Warn");
+    Kapi.log(error.message, "Scraper");
   }
 
   const title = await report.$eval(

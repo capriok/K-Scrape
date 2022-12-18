@@ -1,4 +1,4 @@
-import { Api } from "../../api";
+import { K } from "../../api";
 import {
   articleContentScraper,
   categoryListScraper,
@@ -6,7 +6,7 @@ import {
 } from "./scrapers";
 import { Page } from "../../main";
 
-const Kapi = new Api.Kapi();
+const Kapi = new K.api();
 
 const racerxBase = "https://racerxonline.com";
 
@@ -15,11 +15,11 @@ export async function browseRacerX() {
   await Kapi.open();
   const page = await Kapi.goto(racerx);
   const articles = await initializeCategoryScraper(page);
-  Kapi.log(articles, "Finding");
+  Kapi.save("racerx", articles);
   Kapi.close();
 }
 
-export async function initializeCategoryScraper(page: Page): Promise<unknown> {
+export async function initializeCategoryScraper(page: Page) {
   const categoryList = await categoryListScraper(page, 2);
 
   let articles = [];
