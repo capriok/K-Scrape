@@ -39,8 +39,8 @@ export namespace Api {
       this.browser.close();
     }
 
-    log(msg: string, type?: string) {
-      console.log(`[${type || "Log"}]: ${msg} `);
+    log(msg: any, type?: string) {
+      console.log(`[${type || "Log"}]:`, msg);
     }
   }
 }

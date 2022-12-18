@@ -10,30 +10,28 @@ export const categoryListScraper = async (
 ): Promise<string[]> => {
   const url = ".right > a";
 
-  let categoryUrls = await page.$$eval(url, (nodes: Element[]): string[] => {
+  let list = await page.$$eval(url, (nodes: Element[]): string[] => {
     return nodes.map((node: Element): string => {
       return node.getAttribute("href");
     });
   });
-  console.log(categoryUrls);
 
-  return categoryUrls.slice(0, limit ? limit : categoryUrls.length);
+  return list.slice(0, limit ? limit : list.length);
 };
 
-export const categoryPageScraper = async (
+export const articleListScraper = async (
   page: Page,
   limit?: number
 ): Promise<string[]> => {
   const url = ".ui_link.big_link";
 
-  let categoryUrls = await page.$$eval(url, (nodes: Element[]): string[] => {
+  let list = await page.$$eval(url, (nodes: Element[]): string[] => {
     return nodes.map((node: Element): string => {
       return node.getAttribute("href");
     });
   });
-  console.log(categoryUrls);
 
-  return categoryUrls.slice(0, limit ? limit : categoryUrls.length);
+  return list.slice(0, limit ? limit : list.length);
 };
 
 export const articleContentScraper = async (page: Page): Promise<object> => {
@@ -47,13 +45,13 @@ export const articleContentScraper = async (page: Page): Promise<object> => {
 
   const article = await page.$(content);
 
-  let podcast;
+  let podcast: string | undefined;
   try {
     const iframe = await page.$(selectors.podcast);
     const frame = await iframe.contentFrame();
     podcast = frame.url();
   } catch (error) {
-    console.log(Kapi.log(error.message));
+    Kapi.log(error.message, "Warn");
   }
 
   const title = await article.$eval(
@@ -75,16 +73,16 @@ export const articleContentScraper = async (page: Page): Promise<object> => {
     }
   );
 
-  const pageTarget: any = page.target();
-  console.log(pageTarget);
-  const meta = pageTarget.targetInfo;
-  console.log(meta);
+  const meta = {
+    title: await page.title(),
+    url: page.url(),
+  };
 
   return {
     title: cleanText(title),
     date: cleanText(date),
     description: cleanText(description),
     podcast,
-    // meta: page
+    meta,
   };
 };

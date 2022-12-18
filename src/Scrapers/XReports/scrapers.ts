@@ -10,13 +10,13 @@ export const reportListScraper = async (
 ): Promise<string[]> => {
   const titleUrl = ".title > a";
 
-  let reportUrls = await page.$$eval(titleUrl, (nodes: Element[]): string[] => {
+  let list = await page.$$eval(titleUrl, (nodes: Element[]): string[] => {
     return nodes.map((node: Element): string => {
       return node.getAttribute("href");
     });
   });
 
-  return reportUrls.slice(0, limit ? limit : reportUrls.length);
+  return list.slice(0, limit ? limit : list.length);
 };
 
 export const reportContentScraper = async (page: Page): Promise<Object> => {
@@ -30,9 +30,14 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
 
   const report = await page.$(content);
 
-  const iframe = await page.$(selectors.podcast);
-  const frame = await iframe.contentFrame();
-  const podcast = frame.url();
+  let podcast: string | undefined;
+  try {
+    const iframe = await page.$(selectors.podcast);
+    const frame = await iframe.contentFrame();
+    podcast = frame.url();
+  } catch (error) {
+    Kapi.log(error.message, "Warn");
+  }
 
   const title = await report.$eval(
     selectors.title,
@@ -53,10 +58,16 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     }
   );
 
+  const meta = {
+    title: await page.title(),
+    url: page.url(),
+  };
+
   return {
     title: cleanText(title),
     date: cleanText(date),
     description: cleanText(description),
     podcast,
+    meta,
   };
 };

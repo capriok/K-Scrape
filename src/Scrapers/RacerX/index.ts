@@ -2,7 +2,7 @@ import { Api } from "../../api";
 import {
   articleContentScraper,
   categoryListScraper,
-  categoryPageScraper,
+  articleListScraper,
 } from "./scrapers";
 import { Page } from "../../main";
 
@@ -12,11 +12,10 @@ const racerxBase = "https://racerxonline.com";
 
 export async function browseRacerX() {
   const racerx = `${racerxBase}/podcasts`;
-  console.log(Kapi);
-
   await Kapi.open();
   const page = await Kapi.goto(racerx);
   const articles = await initializeCategoryScraper(page);
+  Kapi.log(articles, "Finding");
   Kapi.close();
 }
 
@@ -24,24 +23,31 @@ export async function initializeCategoryScraper(page: Page): Promise<unknown> {
   const categoryList = await categoryListScraper(page, 2);
 
   let articles = [];
-  let progress = 1;
+  let progressc = 1;
+  let progressa = 1;
 
-  for (const urlc of categoryList.slice(0, 2)) {
-    console.log(`${progress} of ${categoryList.length}`);
+  for (const urlc of categoryList) {
+    Kapi.log(`CategoryList Scraping ${progressc} of ${categoryList.length}`);
     const page = await Kapi.goto(racerxBase + urlc);
-    const articlesList = await categoryPageScraper(page);
+    const articlesList = await articleListScraper(page, 2);
 
-    for (const urla of articlesList.slice(0, 2)) {
-      console.log(`${progress} of ${articlesList.length}`);
+    for (const urla of articlesList) {
+      Kapi.log(
+        `ArticlesList Scraping ${progressa} of ${
+          categoryList.length + articlesList.length
+        }`
+      );
       const page = await Kapi.goto(racerxBase + urla);
       articles.push(await articleContentScraper(page));
 
-      progress++;
+      progressa++;
     }
+
+    progressc++;
   }
 
-  console.log(`Successfully Scraped ${progress} listings`);
-  console.log(articles);
+  console.log(`Successfully Scraped ${progressc} Categories`);
+  console.log(`Successfully Scraped ${progressa} Articles`);
 
   return articles;
 }
