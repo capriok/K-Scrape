@@ -1,53 +1,25 @@
-import Kapi from "../../";
+import { Api } from "../../api";
 import { cleanText } from "../../Helpers/functions";
 import { Page } from "../../main";
 
-export async function browseRacerX() {
-  const racerx = "https://racerxonline.com/podcasts";
-  await Kapi.open();
-  const page = await Kapi.goto(racerx);
-  const articles = await initializeCategoryScraper(page);
-  Kapi.close();
-}
+const Kapi = new Api.Kapi();
 
-export async function initializeCategoryScraper(page: Page): Promise<unknown> {
-  const categoryList = await categoryListScraper(page, 2);
-
-  console.log("Initializing Listing Loop Scraper");
-
-  let articles = [];
-  let progress = 1;
-
-  for (const url of categoryList) {
-    console.log(`${progress} of ${categoryList.length}`);
-    // const page = await Kapi.goto(url);
-    // articles.push(await articleContentScraper(page));
-    progress++;
-  }
-
-  console.log(`Successfully Scraped ${categoryList.length} listings`);
-  console.log(articles);
-
-  return articles;
-}
-
-const categoryListScraper = async (
+export const reportListScraper = async (
   page: Page,
   limit?: number
 ): Promise<string[]> => {
-  const url = ".right > a";
+  const titleUrl = ".title > a";
 
-  let categoryUrls = await page.$$eval(url, (nodes: Element[]): string[] => {
+  let reportUrls = await page.$$eval(titleUrl, (nodes: Element[]): string[] => {
     return nodes.map((node: Element): string => {
       return node.getAttribute("href");
     });
   });
-  console.log(categoryUrls);
 
-  return categoryUrls.slice(0, limit ? limit : categoryUrls.length);
+  return reportUrls.slice(0, limit ? limit : reportUrls.length);
 };
 
-const articleContentScraper = async (page: Page): Promise<object> => {
+export const reportContentScraper = async (page: Page): Promise<Object> => {
   const content = ".article-content";
   const selectors = {
     title: ".entry-title",
@@ -84,7 +56,7 @@ const articleContentScraper = async (page: Page): Promise<object> => {
   return {
     title: cleanText(title),
     date: cleanText(date),
-    // description: cleanText(description),
+    description: cleanText(description),
     podcast,
   };
 };

@@ -1,20 +1,11 @@
 {
-	"lib": [
-		"dom"
-	],
-	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
-		"outDir": "dist",
-		"esModuleInterop": true,
-		"sourceMap": true
-	},
-	"include": [
-		"src/**/*.ts",
-		"main.d.ts"
-	],
-	"exclude": [
-		"node_modules",
-		".vscode"
-	]
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts", "main.d.ts"],
+  "exclude": ["node_modules", ".vscode"]
 }

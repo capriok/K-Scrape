@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "author": "kyle caprio",
   "description": "web aggregator",
-  "main": "index.ts",
+  "main": "server.ts",
   "repository": "https://github.com/capriok/Kapi",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node-dev ./src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev ./src/server.ts",
     "build": "tsc && npm run start",
-    "start": "cross-env NODE_ENV=production node dist/index.js"
+    "start": "cross-env NODE_ENV=production node dist/server.js"
   },
   "engines": {
     "node": "12.16.3"
