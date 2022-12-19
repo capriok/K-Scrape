@@ -6,7 +6,8 @@ import { browseRacerX } from "./scrapers/RacerX";
 import { browseXReports } from "./scrapers/XReports";
 
 // Puppeteer: https://pptr.dev/api/puppeteer.page
-// EJS repo: https://github.com/arboiscodemedia/Typescrip-series/tree/main/Products
+// Semantic: https://semantic-ui.com/elements/button.html
+// EJS: https://github.com/arboiscodemedia/Typescrip-series/tree/main/Products
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,12 +22,8 @@ app.use(express.static(path.join(__dirname, "public")));
 const Kapi = new K.api();
 
 app.get("/", async (req, res) => {
-  const racerx = await Kapi.load("racerx").catch((e) =>
-    Kapi.log(e.message, "File")
-  );
-  const xreport = await Kapi.load("xreport").catch((e) =>
-    Kapi.log(e.message, "File")
-  );
+  const racerx = await Kapi.load("racerx").catch((e) => Kapi.log(e.message, "File"));
+  const xreport = await Kapi.load("xreport").catch((e) => Kapi.log(e.message, "File"));
 
   res.render("home", {
     racerx,

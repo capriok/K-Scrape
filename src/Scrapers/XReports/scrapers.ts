@@ -4,10 +4,7 @@ import { Page } from "../../main";
 
 const Kapi = new K.api();
 
-export const reportListScraper = async (
-  page: Page,
-  limit?: number
-): Promise<string[]> => {
+export const reportListScraper = async (page: Page, limit?: number): Promise<string[]> => {
   const titleUrl = ".title > a";
 
   let list = await page.$$eval(titleUrl, (nodes: Element[]): string[] => {
@@ -26,6 +23,7 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     date: ".entry-date",
     description: ".entry-content > p:not(.powerpress_links)",
     podcast: ".entry-content > iframe",
+    image: "img.size-full",
   };
 
   const report = await page.$(content);
@@ -55,6 +53,10 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     })
     .catch((e) => Kapi.log(e.message));
 
+  const image = await report
+    .$eval(selectors.image, (node: Element): string => node.getAttribute("src"))
+    .catch((e) => Kapi.log(e.message));
+
   const meta = {
     title: await page.title(),
     url: page.url(),
@@ -64,6 +66,7 @@ export const reportContentScraper = async (page: Page): Promise<Object> => {
     title: cleanText(title),
     date: cleanText(date),
     description: cleanText(description),
+    image: image && image,
     podcast,
     meta,
   };

@@ -1,9 +1,14 @@
-<li class="card">
-  <div class="card-content">
+<div class="ui card">
+  <div class="content">
     <h3><a href="<%= article.meta.url %>"><%= article.title %></a></h3>
   </div>
-  <div class="card-content">
-    <p><%= article.date %></p>
-    <iframe src="<%= article.podcast %>" frameborder="0"></iframe>
+  <% if (article.image) { %>
+  <div class="image">
+    <img src="<%= article.image %>" alt="" />
   </div>
-</li>
+  <% } %>
+  <div class="content p-truncated">
+    <p><%= article.date %></p>
+    <p><%= article.description %></p>
+  </div>
+</div>
