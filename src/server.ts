@@ -8,6 +8,7 @@ import routes from "./routes/index";
 // Puppeteer: https://pptr.dev/api/puppeteer.page
 // Semantic: https://semantic-ui.com/elements/button.html
 // EJS: https://github.com/arboiscodemedia/Typescrip-series/tree/main/Products
+// R18 SSR: https://codesandbox.io/s/kind-sammet-j56ro?file=/server/render.js
 
 const app = express();
 const PORT = process.env.PORT || 5000;
